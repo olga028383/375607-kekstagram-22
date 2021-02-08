@@ -1,13 +1,22 @@
-const NAMES = ['Артем', 'Иван', 'Елена', 'Евгений', 'Ольга', 'Игорь', 'Александра', 'Анна', 'Валерия'];
 const QUANTITY_PHOTOS = 25;
+const IDS_MIN = 1;
+const IDS_MAX = 25 * 25;
+const DESCRIPTION_PHOTO = 'Передо мной фотография, сделанная в музее палеонтологии. В центре изображен мальчик в белом свитере и темных джинсах, стоящий перед витриной с экспонатами. Он внимательно читает табличку с описанием экспозиции. В верхней части витрины находится реконструированная картина — макет природы палеогенового и мелового периода. Животные и растения выглядят очень реалистично. Слева — в воде расположилась черепаха, справа — между высокими деревьями находятся массивные фигуры динозавров. В нижней части витрины размещены окаменелые раковины — ископаемые останки морских обитателей.';
+const LIKES_COUNT_MIN = 15;
+const LIKES_COUNT_MAX = 100;
+const COMMENTS_ID_MIN = 1;
+const COMMENTS_ID_MAX = 10;
+const AVATAR_ID_MIN = 1;
+const AVATAR_ID_MAX = 7;
+const MESSAGE_KEY_MIN = 0;
+const AUTHORS_KEY_MIN = 0;
 const TEXT = 'Всё отлично!\n' +
   '  В целом всё неплохо. Но не всё.\n' +
   '  Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.\n' +
   '  Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.\n' +
   '  Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.\n' +
   '  Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!';
-
-let ids = [];
+const AUTHORS = ['Артем', 'Иван', 'Елена', 'Евгений', 'Ольга', 'Игорь', 'Александра', 'Анна', 'Валерия'];
 
 function getRandom(min, max) {
   min = Math.ceil(Math.abs(min));
@@ -20,32 +29,55 @@ function getRandom(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
-function checkLength(string, maxLength) {
-  return string.length === maxLength ? true : false;
-}
+function generateNumbers(quantity) {
+  let randomNumbers = [];
 
-function getId (quantity, ids) {
+  while (randomNumbers.length < quantity) {
+    let id = getRandom(IDS_MIN, IDS_MAX);
 
-  let id = getRandom(1, quantity);
-
-  while(ids.indexOf(id) !== -1){
-    ids.push(id);
+    if (!randomNumbers.includes(id)) {
+      randomNumbers.push(id);
+    }
   }
 
-  return id;
+  return randomNumbers;
 }
 
+function getMessage(text) {
+  let phrases = text.split(/\n/);
+  return phrases[getRandom(MESSAGE_KEY_MIN, phrases.length)].trim();
+}
 
-function createPhoto(ids) {
-  let phrases = TEXT.split(/\n/);
-
+function createPhoto(id) {
   return {
-    id: getId (QUANTITY_PHOTOS, ids),
-    avatar: 'img/avatar-' + getRandom(1, 7) + '.svg',
-    message: phrases[getRandom(0, phrases.length)],
-    name: NAMES[getRandom(0, NAMES.length)],
+    id: id,
+    url: 'photos/' + id + '.svg',
+    description: DESCRIPTION_PHOTO,
+    likes: getRandom(LIKES_COUNT_MIN, LIKES_COUNT_MAX),
+    comments: getComments(getRandom(COMMENTS_ID_MIN, COMMENTS_ID_MAX)),
   }
 }
 
-new Array(QUANTITY_PHOTOS).fill(null).map(() => createPhoto(ids));
-checkLength('В целом всё неплохо', 10);
+function getComments(maxCount) {
+  let comments = [];
+  let ids = generateNumbers(maxCount);
+  let i = 0;
+
+  for (i; i < maxCount; i++) {
+    comments.push(createComment(ids[i]));
+  }
+
+  return comments;
+}
+
+function createComment(id) {
+  return {
+    id: id,
+    avatar: 'img/avatar-' + getRandom(AVATAR_ID_MIN, AVATAR_ID_MAX) + '.svg',
+    message: getMessage(TEXT),
+    name: AUTHORS[getRandom(AUTHORS_KEY_MIN, AUTHORS.length)],
+  }
+}
+
+new Array(QUANTITY_PHOTOS).fill(null).map((value, idx) => createPhoto(idx));
+
