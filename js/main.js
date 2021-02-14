@@ -1,6 +1,5 @@
 const QUANTITY_PHOTOS = 25;
 const IDS_MIN = 1;
-const IDS_MAX = 25 * 25;
 const DESCRIPTION_PHOTO = 'Передо мной фотография, сделанная в музее палеонтологии. В центре изображен мальчик в белом свитере и темных джинсах, стоящий перед витриной с экспонатами. Он внимательно читает табличку с описанием экспозиции. В верхней части витрины находится реконструированная картина — макет природы палеогенового и мелового периода. Животные и растения выглядят очень реалистично. Слева — в воде расположилась черепаха, справа — между высокими деревьями находятся массивные фигуры динозавров. В нижней части витрины размещены окаменелые раковины — ископаемые останки морских обитателей.';
 const LIKES_COUNT_MIN = 15;
 const LIKES_COUNT_MAX = 100;
@@ -18,8 +17,6 @@ const MASSAGES = ['Всё отлично!',
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'];
 const AUTHORS = ['Артем', 'Иван', 'Елена', 'Евгений', 'Ольга', 'Игорь', 'Александра', 'Анна', 'Валерия'];
 
-let photos = new Array(QUANTITY_PHOTOS).fill(null);
-
 function getRandom(min, max) {
   min = Math.ceil(Math.abs(min));
   max = Math.floor(Math.abs(max));
@@ -31,19 +28,22 @@ function getRandom(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
-function generateNumbers(quantity) {
+function generateNumbers(min, max) {
   let randomNumbers = [];
 
-  while (randomNumbers.length < quantity) {
-    let id = getRandom(IDS_MIN, IDS_MAX);
+  return function (){
+    let id = getRandom(min, max);
 
-    if (!randomNumbers.includes(id)) {
-      randomNumbers.push(id);
+    while (randomNumbers.includes(id)) {
+      id = getRandom(min, max);
     }
-  }
 
-  return randomNumbers;
+    randomNumbers.push(id);
+
+    return id;
+  }
 }
+
 
 function createPhoto(id) {
   return {
@@ -57,11 +57,10 @@ function createPhoto(id) {
 
 function getComments(maxCount) {
   let comments = [];
-  let ids = generateNumbers(maxCount);
-  let i = 0;
+  let id = generateNumbers(IDS_MIN, maxCount + 1);
 
-  for (i; i < maxCount; i++) {
-    comments.push(createComment(ids[i]));
+  for (let i = 0; i < maxCount; i++) {
+    comments.push(createComment(id()));
   }
 
   return comments;
@@ -76,4 +75,6 @@ function createComment(id) {
   }
 }
 
-photos.map((value, idx) => createPhoto(idx));
+let photos = new Array(QUANTITY_PHOTOS).fill(null).map((value, idx) => createPhoto(idx));
+
+console.log(photos);
