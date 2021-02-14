@@ -10,13 +10,15 @@ const AVATAR_ID_MIN = 1;
 const AVATAR_ID_MAX = 7;
 const MESSAGE_KEY_MIN = 0;
 const AUTHORS_KEY_MIN = 0;
-const TEXT = 'Всё отлично!\n' +
-  '  В целом всё неплохо. Но не всё.\n' +
-  '  Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.\n' +
-  '  Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.\n' +
-  '  Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.\n' +
-  '  Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!';
+const MASSAGES = ['Всё отлично!',
+  'В целом всё неплохо. Но не всё.',
+  'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.',
+  'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.',
+  'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.',
+  'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'];
 const AUTHORS = ['Артем', 'Иван', 'Елена', 'Евгений', 'Ольга', 'Игорь', 'Александра', 'Анна', 'Валерия'];
+
+let photos = new Array(QUANTITY_PHOTOS).fill(null);
 
 function getRandom(min, max) {
   min = Math.ceil(Math.abs(min));
@@ -41,11 +43,6 @@ function generateNumbers(quantity) {
   }
 
   return randomNumbers;
-}
-
-function getMessage(text) {
-  let phrases = text.split(/\n/);
-  return phrases[getRandom(MESSAGE_KEY_MIN, phrases.length)].trim();
 }
 
 function createPhoto(id) {
@@ -74,10 +71,9 @@ function createComment(id) {
   return {
     id: id,
     avatar: 'img/avatar-' + getRandom(AVATAR_ID_MIN, AVATAR_ID_MAX) + '.svg',
-    message: getMessage(TEXT),
+    message: MASSAGES[getRandom(MESSAGE_KEY_MIN, MASSAGES.length)],
     name: AUTHORS[getRandom(AUTHORS_KEY_MIN, AUTHORS.length)],
   }
 }
 
-new Array(QUANTITY_PHOTOS).fill(null).map((value, idx) => createPhoto(idx));
-
+photos.map((value, idx) => createPhoto(idx));
