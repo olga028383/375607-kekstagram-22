@@ -10,7 +10,7 @@ photos.forEach((photo) => {
   photoElement.setAttribute('href', photo.url);
   photoElement.querySelector('.picture__img').setAttribute('src', photo.url);
   photoElement.querySelector('.picture__comments').textContent = photo.comments.length;
-  photoElement.querySelector('.picture__likes').textContent = photo.comments.length;
+  photoElement.querySelector('.picture__likes').textContent = photo.likes;
   photoListFragment.appendChild(photoElement);
 });
 
