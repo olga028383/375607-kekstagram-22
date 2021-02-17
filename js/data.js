@@ -22,7 +22,7 @@ const AUTHORS = ['Артем', 'Иван', 'Елена', 'Евгений', 'Ол
 function createPhoto(id) {
   return {
     id: id,
-    url: `photos/${id}.svg`,
+    url: `photos/${id + 1}.jpg`,
     description: DESCRIPTION_PHOTO,
     likes: getRandom(LIKES_COUNT_MIN, LIKES_COUNT_MAX),
     comments: getComments(getRandom(COMMENTS_ID_MIN, COMMENTS_ID_MAX)),

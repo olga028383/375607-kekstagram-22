@@ -12,7 +12,7 @@ function getRandom(min, max) {
 function generateNumbers(min, max) {
   let randomNumbers = [];
 
-  return function () {
+  return () => {
     let id = getRandom(min, max);
 
     while (randomNumbers.includes(id)) {
