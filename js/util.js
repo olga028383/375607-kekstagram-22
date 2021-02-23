@@ -25,4 +25,8 @@ function generateNumbers(min, max) {
   };
 }
 
-export {getRandom, generateNumbers};
+function isKey(targetKey, key) {
+  return (targetKey === key );
+}
+
+export {getRandom, generateNumbers, isKey};
