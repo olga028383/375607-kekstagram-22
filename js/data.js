@@ -43,7 +43,7 @@ function getComments(maxCount) {
 function createComment(id) {
   return {
     id: id,
-    avatar: `img/avatar-${getRandom(AVATAR_ID_MIN, AVATAR_ID_MAX)}'.svg`,
+    avatar: `img/avatar-${getRandom(AVATAR_ID_MIN, AVATAR_ID_MAX)}.svg`,
     message: MASSAGES[getRandom(MESSAGE_KEY_MIN, MASSAGES.length)],
     name: AUTHORS[getRandom(AUTHORS_KEY_MIN, AUTHORS.length)],
   }
