@@ -1,4 +1,4 @@
-import {isKey} from './util.js';
+import {closeModalHandler, openModalHandler} from './modal.js';
 
 const body = document.querySelector('body');
 const bigPhoto = document.querySelector('.big-picture');
@@ -10,8 +10,6 @@ const commentsCount = bigPhoto.querySelector('.comments-count');
 const commentsSocialCount = bigPhoto.querySelector('.social__comment-count');
 const commentsLoader = bigPhoto.querySelector('.comments-loader');
 const commentsList = bigPhoto.querySelector('.social__comments');
-const KEY_ENTER = 13;
-const KEY_ESC = 27;
 
 function setWindowInfo(photoInfo) {
   image.src = photoInfo.url;
@@ -54,7 +52,7 @@ function openWindow(photoInfo) {
   commentsLoader.classList.add('hidden');
 
   setWindowInfo(photoInfo);
-  closeWindowHandler();
+  closeModalHandler(closePhoto, closeWindow);
 }
 
 function closeWindow() {
@@ -63,34 +61,7 @@ function closeWindow() {
 }
 
 function openWindowHandler(photo, photoInfo) {
-  photo.addEventListener('click', function (evt) {
-    evt.preventDefault();
-    openWindow(photoInfo);
-  });
-
-  photo.addEventListener('keydown', function (evt) {
-    evt.preventDefault();
-
-    if (isKey(evt.keyCode, KEY_ENTER)) {
-      openWindow(photoInfo);
-    }
-  });
-
-}
-
-function closeWindowHandler() {
-
-  closePhoto.addEventListener('click', function (evt) {
-    evt.preventDefault();
-    closeWindow();
-  });
-
-  closePhoto.addEventListener('keydown', function (evt) {
-    evt.preventDefault();
-    if (isKey(evt.keyCode, KEY_ESC)) {
-      closeWindow();
-    }
-  });
+  openModalHandler(photo, 'click', openWindow, photoInfo);
 }
 
 export {openWindowHandler};

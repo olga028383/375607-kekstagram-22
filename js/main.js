@@ -1,6 +1,8 @@
 import {photos} from './data.js';
 import {drawPhoto} from './draw_photo.js';
 import {openWindowHandler} from './window_big_photo.js';
+import './form.js';
+import './slider.js';
 
 drawPhoto(photos);
 
