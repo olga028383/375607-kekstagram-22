@@ -1,12 +1,15 @@
+import {setDataZoom, clearFiledZoom, MAX_PERCENT} from './scale_photo.js';
+
 const slider = document.querySelector('.effect-level__slider');
 const fieldEffect = document.querySelector('.effect-level__value');
 const effectButton = document.querySelectorAll('.effects__radio');
 const imageContainer = document.querySelector('.img-upload__preview');
 const image = imageContainer.querySelector('img');
 
-
 function setEffect(button) {
-  const effectName = button.value;
+  const effectName = button.getAttribute('value');
+  setDataZoom();
+  showSlider();
 
   switch (effectName) {
     case 'chrome':
@@ -26,7 +29,7 @@ function setEffect(button) {
       break;
     default:
       hideSlider();
-
+      clearEffect();
   }
 }
 
@@ -116,6 +119,10 @@ function setEffectHeat() {
 
 function clearEffect() {
   image.removeAttribute('class');
+  image.removeAttribute('style');
+}
+
+function showSlider() {
   slider.removeAttribute('style');
 }
 
@@ -125,9 +132,15 @@ function hideSlider() {
 
 function updateSlider(filterName, postfix = '') {
   slider.noUiSlider.on('update', (_, handle, unencoded) => {
-    image.setAttribute('style', `filter: ${filterName}(${unencoded[handle]}${postfix})`);
+    let zoom = clearFiledZoom();
+    image.setAttribute('style', `filter: ${filterName}(${unencoded[handle]}${postfix}); transform: scale(${zoom / MAX_PERCENT})`);
     fieldEffect.setAttribute('value', unencoded[handle]);
   });
+}
+
+function switchFirstButton() {
+  const effectButtonNone = document.querySelector('#effect-none');
+  effectButtonNone.click();
 }
 
 noUiSlider.create(slider, {
@@ -143,3 +156,5 @@ hideSlider();
 effectButton.forEach((button) => {
   setEffectHandler(button);
 });
+
+export {clearEffect, hideSlider, switchFirstButton};
