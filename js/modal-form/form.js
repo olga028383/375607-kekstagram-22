@@ -1,6 +1,7 @@
-import {closeModalHandler, openModalHandler} from './modal.js';
+import {closeModalHandler, openModalHandler} from '../modal.js';
+import {validateTagsHandler, validateCommentHandler} from './form-validate.js';
 import {clearEffect, hideSlider, switchFirstButton} from './slider.js';
-import {setDataZoom} from './scale_photo.js';
+import {setDataZoom} from './scale-photo.js';
 
 const body = document.querySelector('body');
 const form = body.querySelector('.img-upload__form');
@@ -12,6 +13,9 @@ function openForm() {
   overlayForm.classList.remove('hidden');
   body.classList.remove('modal-open');
 
+  validateTagsHandler();
+  validateCommentHandler();
+
   closeModalHandler(close, closeForm);
 }
 
@@ -20,6 +24,9 @@ function closeForm() {
   setDataZoom();
   hideSlider();
   switchFirstButton();
+
+  validateTagsHandler('remove');
+  validateCommentHandler('remove');
 
   overlayForm.classList.add('hidden');
   body.classList.add('modal-open');

@@ -1,4 +1,4 @@
-import {setDataZoom, clearFiledZoom, MAX_PERCENT} from './scale_photo.js';
+import {setDataZoom, clearFiledZoom, MAX_PERCENT} from './scale-photo.js';
 
 const slider = document.querySelector('.effect-level__slider');
 const fieldEffect = document.querySelector('.effect-level__value');

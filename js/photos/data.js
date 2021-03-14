@@ -1,4 +1,4 @@
-import {getRandom, generateNumbers} from './util.js';
+import {getRandom, generateNumbers} from '../util.js';
 
 const QUANTITY_PHOTOS = 25;
 const IDS_MIN = 1;

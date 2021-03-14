@@ -1,4 +1,4 @@
-import {closeModalHandler, openModalHandler} from './modal.js';
+import {closeModalHandler, openModalHandler} from '../modal.js';
 
 const body = document.querySelector('body');
 const bigPhoto = document.querySelector('.big-picture');
