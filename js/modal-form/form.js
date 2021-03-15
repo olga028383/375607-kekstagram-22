@@ -1,4 +1,4 @@
-import {closeModalHandler, openModalHandler} from '../modal.js';
+import {actionModal} from '../modal.js';
 import {validateTagsHandler, validateCommentHandler} from './form-validate.js';
 import {clearEffect, hideSlider, switchFirstButton} from './slider.js';
 import {setDataZoom} from './scale-photo.js';
@@ -11,12 +11,12 @@ const close = form.querySelector('#upload-cancel');
 
 function openForm() {
   overlayForm.classList.remove('hidden');
-  body.classList.remove('modal-open');
+  body.classList.add('modal-open');
 
   validateTagsHandler();
   validateCommentHandler();
 
-  closeModalHandler(close, closeForm);
+  actionModal('close', ['click', 'keydown'], close, closeForm);
 }
 
 function closeForm() {
@@ -28,12 +28,13 @@ function closeForm() {
   validateTagsHandler('remove');
   validateCommentHandler('remove');
 
-  overlayForm.classList.add('hidden');
-  body.classList.add('modal-open');
   form.reset();
+  overlayForm.classList.add('hidden');
+  body.classList.remove('modal-open');
+
 }
 
-openModalHandler(fileForm, 'change', openForm);
+actionModal('open', ['change', 'keydown'], fileForm, openForm);
 
 
 

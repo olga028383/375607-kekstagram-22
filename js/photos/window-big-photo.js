@@ -1,4 +1,4 @@
-import {closeModalHandler, openModalHandler} from '../modal.js';
+import {actionModal} from '../modal.js';
 
 const body = document.querySelector('body');
 const bigPhoto = document.querySelector('.big-picture');
@@ -46,13 +46,16 @@ function drawComments(comments) {
 }
 
 function openWindow(photoInfo) {
-  body.classList.add('modal-open');
-  bigPhoto.classList.remove('hidden');
-  commentsSocialCount.classList.add('hidden');
-  commentsLoader.classList.add('hidden');
 
-  setWindowInfo(photoInfo);
-  closeModalHandler(closePhoto, closeWindow);
+  return function () {
+    body.classList.add('modal-open');
+    bigPhoto.classList.remove('hidden');
+    commentsSocialCount.classList.add('hidden');
+    commentsLoader.classList.add('hidden');
+
+    setWindowInfo(photoInfo);
+    actionModal('close', ['click', 'keydown'], closePhoto, closeWindow);
+  }
 }
 
 function closeWindow() {
@@ -61,7 +64,7 @@ function closeWindow() {
 }
 
 function openWindowHandler(photo, photoInfo) {
-  openModalHandler(photo, 'click', openWindow, photoInfo);
+  actionModal('open', ['click', 'keydown'], photo, openWindow(photoInfo));
 }
 
 export {openWindowHandler};
