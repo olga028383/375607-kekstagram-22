@@ -22,7 +22,6 @@ function isFindDublicateValues(tagValue) {
 
 function validateTags() {
   const tagValue = tagField.value.toLowerCase().trim().replace(/\s+/g, ' ');
-
   if (!isCheckFilling(tagValue)) {
     tagField.setCustomValidity('Хеш тег начинается с решетки, состоит только из чисел и цифр, между собой разделяется пробелом');
   } else if (isCountTags(tagValue)) {
@@ -32,7 +31,6 @@ function validateTags() {
   } else {
     tagField.setCustomValidity('');
   }
-
   tagField.reportValidity();
 }
 
@@ -61,5 +59,18 @@ function validateCommentHandler(action = 'add') {
   }
 }
 
-export {validateTagsHandler, validateCommentHandler};
+function setStyleFieldInvalid() {
+  toggleStyleField(tagField, !tagField.validity.valid);
+  toggleStyleField(commentField, !commentField.validity.valid);
+}
+
+function toggleStyleField(field, error) {
+  if (error) {
+    field.setAttribute('style', 'border: 1px solid red');
+  } else {
+    field.removeAttribute('style');
+  }
+}
+
+export {validateTagsHandler, validateCommentHandler, setStyleFieldInvalid};
 
