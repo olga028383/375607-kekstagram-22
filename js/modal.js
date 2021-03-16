@@ -2,41 +2,41 @@ import {isKey} from './util.js';
 
 const KEY_ENTER = 13;
 const KEY_ESC = 27;
+const ACTION_WINDOW_OPEN = 'open';
+const ACTION_WINDOW_CLOSE = 'close';
 
-function openModalHandler(button, event, callback, params = {}) {
-  button.addEventListener(event, function (evt) {
-    evt.preventDefault();
-    callback(params);
-  });
-
-  if (event === 'click') {
-    openModalPressHandler(button, callback, params);
+function actionModal(nameAction, eventsName, button, callback) {
+  switch (nameAction) {
+    case  ACTION_WINDOW_OPEN:
+      getMouseHandlers(eventsName, button, callback);
+      getKeydownHandlers(eventsName, button, callback, KEY_ENTER);
+      break;
+    case  ACTION_WINDOW_CLOSE:
+      getMouseHandlers(eventsName, button, callback);
+      getKeydownHandlers(eventsName, button, callback, KEY_ESC);
+      break;
   }
 }
 
-function openModalPressHandler(button, callback, params = {}) {
-  button.addEventListener('keydown', function (evt) {
-    evt.preventDefault();
-
-    if (isKey(evt.keyCode, KEY_ENTER)) {
-      callback(params);
-    }
-  });
-}
-
-function closeModalHandler(button, callback) {
-
-  button.addEventListener('click', function (evt) {
-    evt.preventDefault();
-    callback();
-  });
-
-  button.addEventListener('keydown', function (evt) {
-    evt.preventDefault();
-    if (isKey(evt.keyCode, KEY_ESC)) {
+function getMouseHandlers(eventsName, button, callback) {
+  eventsName.forEach((eventName) => {
+    button.addEventListener(eventName, function (evt) {
+      evt.preventDefault();
       callback();
-    }
+    });
   });
 }
 
-export {closeModalHandler, openModalHandler};
+function getKeydownHandlers(eventsName, button, callback, code) {
+  eventsName.forEach((eventName) => {
+    button.addEventListener(eventName, function (evt) {
+      evt.preventDefault();
+      if (isKey(evt.keyCode, code)) {
+        callback();
+      }
+    });
+  });
+}
+
+
+export {actionModal};

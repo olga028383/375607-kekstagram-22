@@ -1,8 +1,8 @@
-import {photos} from './data.js';
-import {drawPhoto} from './draw_photo.js';
-import {openWindowHandler} from './window_big_photo.js';
-import './form.js';
-import './slider.js';
+import {photos} from './photos/data.js';
+import {drawPhoto} from './photos/draw-photo.js';
+import {openWindowHandler} from './photos/window-big-photo.js';
+import './modal-form/form.js';
+import './modal-form/slider.js';
 
 drawPhoto(photos);
 
