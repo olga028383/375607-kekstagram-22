@@ -1,6 +1,5 @@
 import {generateNumbers} from './util.js';
 
-const RENDER_DELAY = 500;
 const MAX_RANDOM = 10;
 const MIN_RANDOM = 0;
 const filter = document.querySelector('.img-filters');
@@ -12,8 +11,7 @@ filter.classList.remove('img-filters--inactive');
 
 function setRandomDefault(photos, callback) {
   buttonDefault.addEventListener('click', function (evt) {
-    toggleClass(evt);
-    _.debounce(() => callback(photos), RENDER_DELAY);
+    callback(photos);
   });
 }
 
@@ -26,11 +24,12 @@ function setRandomPhotos(photos, callback) {
     for (let i = 0; i < MAX_RANDOM; i++) {
       photosRandom.push(photos[numberRandom()]);
     }
-    _.debounce(() => callback(photosRandom), RENDER_DELAY);
+    callback(photosRandom);
   });
 }
 
 function setPopularPhotos(photos, callback) {
+
   buttonPopular.addEventListener('click', function (evt) {
     toggleClass(evt);
     let photosPopular = photos
@@ -39,7 +38,8 @@ function setPopularPhotos(photos, callback) {
         return b.comments.length - a.comments.length;
       });
 
-    _.debounce(() => callback(photosPopular), RENDER_DELAY);
+    callback(photosPopular);
+
   });
 }
 
