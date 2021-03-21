@@ -8,7 +8,11 @@ const body = document.querySelector('body');
 const form = body.querySelector('.img-upload__form');
 const fileForm = form.querySelector('#upload-file');
 const overlayForm = form.querySelector('.img-upload__overlay');
+const image = overlayForm.querySelector('img');
 const close = form.querySelector('#upload-cancel');
+const DEFAULT_IMAGE = 'img/upload-default-image.jpg';
+
+const FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 
 function hideWindowRequest(template) {
   return function () {
@@ -32,9 +36,55 @@ function showWindowRequest(templateName) {
   }
 }
 
+function uploadPhoto() {
+  const file = fileForm.files[0];
+  const fileName = file.name.toLowerCase();
+
+  const matches = FILE_TYPES.some((it) => {
+    return fileName.endsWith(it);
+  });
+
+  if (!matches) {
+    throw Error(`Допустимый формат изображений ${FILE_TYPES.join(', ')} `);
+  }
+
+  const reader = new FileReader();
+  reader.addEventListener('load', () => {
+    togglePhoto(reader.result);
+  });
+
+  reader.readAsDataURL(file);
+
+}
+
+function togglePhoto(result, action = 'add') {
+  const previewEffects = form.querySelectorAll('.effects__preview');
+
+  if (action === 'delete') {
+    image.setAttribute('src', DEFAULT_IMAGE);
+  } else {
+    image.setAttribute('src', result);
+  }
+
+  previewEffects.forEach((element) => {
+    if (action === 'delete') {
+      element.removeAttribute('style');
+    } else {
+      element.setAttribute('style', `background-image: url(${result})`);
+    }
+  });
+}
+
 function openForm() {
   overlayForm.classList.remove('hidden');
   body.classList.add('modal-open');
+
+  try {
+    uploadPhoto();
+  } catch (err) {
+    createError(err.message);
+    closeForm();
+  }
 
   validateTagsHandler();
   validateCommentHandler();
@@ -49,6 +99,8 @@ function closeForm() {
   setDataZoom();
   hideSlider();
   switchFirstButton();
+
+  togglePhoto(null, 'delete');
 
   validateTagsHandler('remove');
   validateCommentHandler('remove');
@@ -87,6 +139,7 @@ function submitForm(evt) {
     },
   );
 }
+
 
 actionModal('open', ['change', 'keydown'], fileForm, openForm);
 
