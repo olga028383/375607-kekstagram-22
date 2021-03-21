@@ -10,13 +10,48 @@ const commentsCount = bigPhoto.querySelector('.comments-count');
 const commentsSocialCount = bigPhoto.querySelector('.social__comment-count');
 const commentsLoader = bigPhoto.querySelector('.comments-loader');
 const commentsList = bigPhoto.querySelector('.social__comments');
+const COUNT_COMMENTS = 5;
+let photoInfo = null;
+let showedComments = COUNT_COMMENTS;
 
-function setWindowInfo(photoInfo) {
+function setWindowInfo() {
   image.src = photoInfo.url;
   likesCount.textContent = photoInfo.likes;
   commentsCount.textContent = photoInfo.comments.length;
-  commentsList.replaceWith(drawComments(photoInfo.comments));
   description.textContent = photoInfo.description;
+
+  loadComments();
+}
+
+function clearCommentsList() {
+  while (commentsList.firstChild) {
+    commentsList.removeChild(commentsList.firstChild);
+  }
+}
+
+function loadComments() {
+  const displayedComments = photoInfo.comments.slice(0, COUNT_COMMENTS);
+
+  clearCommentsList();
+  commentsList.appendChild(drawComments(displayedComments));
+
+  if (displayedComments.length < photoInfo.comments.length) {
+    commentsLoader.classList.remove('hidden');
+  }
+
+  commentsLoader.addEventListener('click', loadCommentsHandler);
+}
+
+function loadCommentsHandler() {
+  const lastCountComments = showedComments;
+  const loadedComments = photoInfo.comments.slice(lastCountComments, lastCountComments + COUNT_COMMENTS);
+
+  commentsList.appendChild(drawComments(loadedComments));
+  showedComments = showedComments + loadedComments.length;
+
+  if (photoInfo.comments.length - showedComments === 0) {
+    commentsLoader.classList.add('hidden');
+  }
 }
 
 function drawComments(comments) {
@@ -45,26 +80,31 @@ function drawComments(comments) {
   return commentListFragment;
 }
 
-function openWindow(photoInfo) {
+function openWindow(info) {
 
   return function () {
+    photoInfo = info;
+
     body.classList.add('modal-open');
     bigPhoto.classList.remove('hidden');
     commentsSocialCount.classList.add('hidden');
     commentsLoader.classList.add('hidden');
 
-    setWindowInfo(photoInfo);
+    setWindowInfo();
     actionModal('close', ['click', 'keydown'], closePhoto, closeWindow);
   }
 }
 
 function closeWindow() {
+  clearCommentsList();
   body.classList.remove('modal-open');
   bigPhoto.classList.add('hidden');
+  showedComments = COUNT_COMMENTS;
+  commentsLoader.removeEventListener('click', loadCommentsHandler);
 }
 
-function openWindowHandler(photo, photoInfo) {
-  actionModal('open', ['click', 'keydown'], photo, openWindow(photoInfo));
+function openWindowHandler(photo, info) {
+  actionModal('open', ['click', 'keydown'], photo, openWindow(info));
 }
 
 export {openWindowHandler};
