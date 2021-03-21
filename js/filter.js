@@ -10,7 +10,8 @@ const buttonPopular = filter.querySelector('#filter-discussed');
 filter.classList.remove('img-filters--inactive');
 
 function setRandomDefault(photos, callback) {
-  buttonDefault.addEventListener('click', function () {
+  buttonDefault.addEventListener('click', function (evt) {
+    toggleClass(evt);
     callback(photos);
   });
 }

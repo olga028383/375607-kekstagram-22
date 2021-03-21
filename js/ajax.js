@@ -1,4 +1,4 @@
-const ALERT_SHOW_TIME = 5000;
+const ALERT_SHOW_TIME = 2000;
 
 function createError(errorMessage) {
   let errorBox;
