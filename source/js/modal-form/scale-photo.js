@@ -8,13 +8,13 @@ const smallerControl = document.querySelector('.scale__control--smaller');
 const fieldZoom = document.querySelector('.scale__control--value');
 const imageZoom = document.querySelector('.img-upload__preview img');
 
-function zoomInHandler() {
+function biggerControlClickHandler() {
   let value = clearFiledZoom();
   value = (value === MAX_VALUE) ? MAX_VALUE : value += STEP;
   setDataZoom(value);
 }
 
-function zoomOutHandler() {
+function smallerControlClickHandler() {
   let value = clearFiledZoom();
   value = (value === MIN_VALUE) ? MIN_VALUE : value -= STEP;
   setDataZoom(value);
@@ -32,7 +32,7 @@ function clearFiledZoom() {
 
 setDataZoom();
 
-biggerControl.addEventListener('click', zoomInHandler);
-smallerControl.addEventListener('click', zoomOutHandler);
+biggerControl.addEventListener('click', biggerControlClickHandler);
+smallerControl.addEventListener('click', smallerControlClickHandler);
 
 export {setDataZoom, clearFiledZoom, MAX_PERCENT};
