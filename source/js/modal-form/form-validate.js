@@ -2,8 +2,7 @@ const MAX_COUNT_TAGS = 5;
 const MAX_LENGTH_COMMENT = 140;
 const ACTION_ADD = 'add';
 const ACTION_DELETE = 'delete';
-const tagField = document.querySelector('.text__hashtags');
-const commentField = document.querySelector('.text__description');
+const ERROR_CLASS = 'filed-error';
 
 const ErrorMessages = {
   fillingTags: 'Хеш тег начинается с решетки, состоит только из чисел и цифр, между собой разделяется пробелом',
@@ -11,6 +10,9 @@ const ErrorMessages = {
   repeatTags: 'Теги не должны повторяться',
   numberOfCharacters: `Комментарий не должен превышать ${MAX_LENGTH_COMMENT}`,
 };
+
+const tagField = document.querySelector('.text__hashtags');
+const commentField = document.querySelector('.text__description');
 
 function isCheckFilling(tagValue) {
   const REGULAR = /^(#[\wa-яА-Я]{1,20}\s?)+$/;
@@ -75,11 +77,12 @@ function setStyleFieldInvalid() {
 
 function toggleStyleField(field, error) {
   if (error) {
-    field.setAttribute('style', 'border: 1px solid red');
+    field.classList.add(ERROR_CLASS);
   } else {
-    field.removeAttribute('style');
+    field.classList.remove(ERROR_CLASS);
   }
 }
+
 
 export {validateTags, validateComment, setStyleFieldInvalid};
 

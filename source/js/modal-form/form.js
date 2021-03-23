@@ -20,6 +20,7 @@ const fileForm = form.querySelector('#upload-file');
 const overlayForm = form.querySelector('.img-upload__overlay');
 const image = overlayForm.querySelector('img');
 const close = form.querySelector('#upload-cancel');
+const button = form.querySelector('#upload-submit');
 const DEFAULT_IMAGE = 'img/upload-default-image.jpg';
 
 function hideWindowRequest(template) {
@@ -29,19 +30,22 @@ function hideWindowRequest(template) {
 }
 
 function showWindowRequest(templateName) {
-  let template = body.querySelector(`#${templateName}`).content;
+  const template = body.querySelector(`#${templateName}`);
+
   if (!template) {
     throw Error(ErrorMessages.notTemplate);
-  } else {
-    let blockMessage = template.querySelector(`.${templateName}`);
-
-    let windowElement = blockMessage.cloneNode(true)
-    windowElement.setAttribute('style', 'z-index: 5');
-    let close = windowElement.querySelector(`.${templateName}__button`);
-    body.querySelector('main').appendChild(windowElement);
-
-    actionModal('close', ['click', 'keydown', 'window'], close, hideWindowRequest(windowElement));
   }
+
+  const content = template.content;
+  let blockMessage = content.querySelector(`.${templateName}`);
+
+  let windowElement = blockMessage.cloneNode(true);
+  windowElement.setAttribute('style', 'z-index: 5');
+  let close = windowElement.querySelector(`.${templateName}__button`);
+  body.querySelector('main').appendChild(windowElement);
+
+  actionModal('close', ['click', 'keydown', 'window'], close, hideWindowRequest(windowElement));
+
 }
 
 function uploadPhoto() {
@@ -89,17 +93,20 @@ function openForm() {
 
   try {
     uploadPhoto();
+
+    validateTags();
+    validateComment();
+
+    button.addEventListener('click', setStyleFieldInvalid);
+    form.addEventListener('submit', submitForm);
+
+    actionModal('close', ['click', 'keydown'], close, closeForm);
+
   } catch (err) {
     createError(err.message);
     closeForm();
   }
 
-  validateTags();
-  validateComment();
-
-  form.addEventListener('submit', submitForm);
-
-  actionModal('close', ['click', 'keydown'], close, closeForm);
 }
 
 function closeForm() {
@@ -123,9 +130,6 @@ function closeForm() {
 
 function submitForm(evt) {
   evt.preventDefault();
-
-  //Вот это нифига не работает
-  setStyleFieldInvalid();
 
   saveData(
     new FormData(evt.target),

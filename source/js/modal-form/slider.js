@@ -20,7 +20,7 @@ function setEffect(button) {
   showSlider();
 
   if (Object.keys(EffectLists).includes(effectName)) {
-    EffectLists.effectName();
+    EffectLists[effectName]();
   } else {
     hideSlider();
     clearEffect();

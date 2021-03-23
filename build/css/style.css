@@ -1416,3 +1416,9 @@ main {
 .hidden {
   display: none;
 }
+.filed-error {
+  border: 1px solid #ff4e4e;
+}
+.filed-error:focus{
+  outline: 1px solid #ff4e4e;
+}
