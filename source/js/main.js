@@ -1,3 +1,4 @@
+/* global _:readonly */
 import {drawPhoto} from './photos/draw-photo.js';
 import './modal-form/form.js';
 import './modal-form/slider.js';

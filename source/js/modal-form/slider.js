@@ -1,5 +1,13 @@
+/* global noUiSlider:readonly */
 import {setDataZoom, clearFiledZoom, MAX_PERCENT} from './scale-photo.js';
 
+const EffectLists = {
+  chrome: setEffectChrome,
+  sepia: setEffectSepia,
+  marvin: setEffectMarvin,
+  phobos: setEffectPhobos,
+  heat: setEffectHeat,
+};
 const slider = document.querySelector('.effect-level__slider');
 const fieldEffect = document.querySelector('.effect-level__value');
 const effectButton = document.querySelectorAll('.effects__radio');
@@ -11,26 +19,13 @@ function setEffect(button) {
   setDataZoom();
   showSlider();
 
-  switch (effectName) {
-    case 'chrome':
-      setEffectChrome();
-      break;
-    case 'sepia':
-      setEffectSepia();
-      break;
-    case 'marvin':
-      setEffectMarvin();
-      break;
-    case 'phobos':
-      setEffectPhobos();
-      break;
-    case 'heat':
-      setEffectHeat();
-      break;
-    default:
-      hideSlider();
-      clearEffect();
+  if (Object.keys(EffectLists).includes(effectName)) {
+    EffectLists[effectName]();
+  } else {
+    hideSlider();
+    clearEffect();
   }
+
 }
 
 function setEffectHandler(button) {

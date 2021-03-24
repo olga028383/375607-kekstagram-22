@@ -14,7 +14,7 @@ function createError(errorMessage) {
   }, ALERT_SHOW_TIME);
 }
 
-const checkStatus = (response) => {
+function checkStatus(response) {
   if (response.ok) {
     return response;
   }
@@ -38,7 +38,8 @@ function loadData(loadHandler) {
 function saveData(data, loadHandler, failHandler) {
   fetch('https://22.javascript.pages.academy/kekstagram', {
     method: 'POST',
-    body: data})
+    body: data,
+  })
     .then(checkStatus)
     .then((json) => {
       loadHandler(json)

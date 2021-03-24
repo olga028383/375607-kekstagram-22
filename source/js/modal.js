@@ -15,10 +15,10 @@ function actionModal(nameAction, eventsName, button, callback) {
         break;
       case 'keydown':
         if (nameAction === ACTION_WINDOW_OPEN) {
-          getKeydownHandler(eventsName, button, callback, KEY_ENTER);
+          getKeydownHandler(eventName, button, callback, KEY_ENTER);
         }
         else if (nameAction === ACTION_WINDOW_CLOSE) {
-          getKeydownHandler(eventsName, button, callback, KEY_ESC);
+          getKeydownHandler(eventName, button, callback, KEY_ESC);
         }
         break;
       case 'window':

@@ -1,8 +1,18 @@
 import {saveData, createError} from '../ajax.js';
 import {actionModal} from '../modal.js';
-import {validateTagsHandler, validateCommentHandler, setStyleFieldInvalid} from './form-validate.js';
+import {validateTags, validateComment, setStyleFieldInvalid} from './form-validate.js';
 import {clearEffect, hideSlider, switchFirstButton} from './slider.js';
 import {setDataZoom} from './scale-photo.js';
+
+const FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
+
+const ErrorMessages = {
+  notTemplate: 'Такого шаблона не существует',
+  imageFormat: `Допустимый формат изображений ${FILE_TYPES.join(', ')}`,
+};
+
+const ACTION_ADD = 'add';
+const ACTION_DELETE = 'delete';
 
 const body = document.querySelector('body');
 const form = body.querySelector('.img-upload__form');
@@ -10,9 +20,8 @@ const fileForm = form.querySelector('#upload-file');
 const overlayForm = form.querySelector('.img-upload__overlay');
 const image = overlayForm.querySelector('img');
 const close = form.querySelector('#upload-cancel');
+const button = form.querySelector('#upload-submit');
 const DEFAULT_IMAGE = 'img/upload-default-image.jpg';
-
-const FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 
 function hideWindowRequest(template) {
   return function () {
@@ -21,19 +30,22 @@ function hideWindowRequest(template) {
 }
 
 function showWindowRequest(templateName) {
-  let template = body.querySelector(`#${templateName}`).content;
+  const template = body.querySelector(`#${templateName}`);
+
   if (!template) {
-    throw Error('Такого шаблона не существует');
-  } else {
-    let blockMessage = template.querySelector(`.${templateName}`);
-
-    let windowElement = blockMessage.cloneNode(true)
-    windowElement.setAttribute('style', 'z-index: 5');
-    let close = windowElement.querySelector(`.${templateName}__button`);
-    body.querySelector('main').appendChild(windowElement);
-
-    actionModal('close', ['click', 'keydown', 'window'], close, hideWindowRequest(windowElement));
+    throw Error(ErrorMessages.notTemplate);
   }
+
+  const content = template.content;
+  let blockMessage = content.querySelector(`.${templateName}`);
+
+  let windowElement = blockMessage.cloneNode(true);
+  windowElement.setAttribute('style', 'z-index: 5');
+  let close = windowElement.querySelector(`.${templateName}__button`);
+  body.querySelector('main').appendChild(windowElement);
+
+  actionModal('close', ['click', 'keydown', 'window'], close, hideWindowRequest(windowElement));
+
 }
 
 function uploadPhoto() {
@@ -45,7 +57,7 @@ function uploadPhoto() {
   });
 
   if (!matches) {
-    throw Error(`Допустимый формат изображений ${FILE_TYPES.join(', ')} `);
+    throw Error(ErrorMessages.imageFormat);
   }
 
   const reader = new FileReader();
@@ -57,17 +69,17 @@ function uploadPhoto() {
 
 }
 
-function togglePhoto(result, action = 'add') {
+function togglePhoto(result, action = ACTION_ADD) {
   const previewEffects = form.querySelectorAll('.effects__preview');
 
-  if (action === 'delete') {
+  if (action === ACTION_DELETE) {
     image.setAttribute('src', DEFAULT_IMAGE);
   } else {
     image.setAttribute('src', result);
   }
 
   previewEffects.forEach((element) => {
-    if (action === 'delete') {
+    if (action === ACTION_DELETE) {
       element.removeAttribute('style');
     } else {
       element.setAttribute('style', `background-image: url(${result})`);
@@ -81,17 +93,20 @@ function openForm() {
 
   try {
     uploadPhoto();
+
+    validateTags();
+    validateComment();
+
+    button.addEventListener('click', setStyleFieldInvalid);
+    form.addEventListener('submit', submitForm);
+
+    actionModal('close', ['click', 'keydown'], close, closeForm);
+
   } catch (err) {
     createError(err.message);
     closeForm();
   }
 
-  validateTagsHandler();
-  validateCommentHandler();
-
-  form.addEventListener('submit', submitForm);
-
-  actionModal('close', ['click', 'keydown'], close, closeForm);
 }
 
 function closeForm() {
@@ -100,10 +115,10 @@ function closeForm() {
   hideSlider();
   switchFirstButton();
 
-  togglePhoto(null, 'delete');
+  togglePhoto(null, ACTION_DELETE);
 
-  validateTagsHandler('remove');
-  validateCommentHandler('remove');
+  validateTags(ACTION_DELETE);
+  validateComment(ACTION_DELETE);
 
   form.removeEventListener('submit', submitForm);
 
@@ -115,9 +130,6 @@ function closeForm() {
 
 function submitForm(evt) {
   evt.preventDefault();
-
-  //Вот это нифига не работает
-  setStyleFieldInvalid();
 
   saveData(
     new FormData(evt.target),

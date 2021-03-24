@@ -7,8 +7,6 @@ const buttonDefault = filter.querySelector('#filter-default');
 const buttonRandom = filter.querySelector('#filter-random');
 const buttonPopular = filter.querySelector('#filter-discussed');
 
-filter.classList.remove('img-filters--inactive');
-
 function setRandomDefault(photos, callback) {
   buttonDefault.addEventListener('click', function (evt) {
     toggleClass(evt);
@@ -49,5 +47,7 @@ function toggleClass(evt) {
   filterActive.classList.remove('img-filters__button--active');
   evt.target.classList.add('img-filters__button--active');
 }
+
+filter.classList.remove('img-filters--inactive');
 
 export {setRandomPhotos, setPopularPhotos, setRandomDefault};

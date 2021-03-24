@@ -1,5 +1,6 @@
 import {actionModal} from '../modal.js';
 
+const COUNT_COMMENTS = 5;
 const body = document.querySelector('body');
 const bigPhoto = document.querySelector('.big-picture');
 const closePhoto = bigPhoto.querySelector('.big-picture__cancel');
@@ -10,7 +11,7 @@ const commentsCount = bigPhoto.querySelector('.comments-count');
 const commentsSocialCount = bigPhoto.querySelector('.social__comment-count');
 const commentsLoader = bigPhoto.querySelector('.comments-loader');
 const commentsList = bigPhoto.querySelector('.social__comments');
-const COUNT_COMMENTS = 5;
+
 let photoInfo = null;
 let showedComments = COUNT_COMMENTS;
 
