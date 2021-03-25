@@ -1,7 +1,6 @@
 function getRandom(min, max) {
   min = Math.ceil(Math.abs(min));
   max = Math.floor(Math.abs(max));
-  //проверить, чтобы все работало
   return (min >= max) ? 0 : Math.floor(Math.random() * (max - min)) + min;
 }
 
