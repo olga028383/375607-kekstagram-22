@@ -110,12 +110,15 @@ function setEffectHeat() {
 }
 
 function clearEffect() {
-  image.removeAttribute('class');
-  image.removeAttribute('style');
+  const currentEffect = image.className;
+  if(currentEffect) {
+    image.classList.remove(currentEffect);
+  }
+  image.style = '';
 }
 
 function showSlider() {
-  wraperSlider.removeAttribute('style');
+  wraperSlider.style = '';
 }
 
 function hideSlider() {

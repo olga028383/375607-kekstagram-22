@@ -80,7 +80,7 @@ function togglePhoto(result, action = ACTION_ADD) {
 
   previewEffects.forEach((element) => {
     if (action === ACTION_DELETE) {
-      element.removeAttribute('style');
+      element.style = '';
     } else {
       element.style.backgroundImage = `url(${result})`;
     }
