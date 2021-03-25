@@ -5,7 +5,7 @@ const ACTION_DELETE = 'delete';
 const ERROR_CLASS = 'filed-error';
 
 const ErrorMessages = {
-  fillingTags: 'Хеш тег начинается с решетки, состоит только из чисел и цифр, между собой разделяется пробелом',
+  fillingTags: 'Хеш тег начинается с решетки и не может состоять только из одной решетки, состоит только из чисел и цифр, между собой разделяется пробелом',
   numberOfTags: `Вы можете добавить не более ${MAX_COUNT_TAGS} тегов`,
   repeatTags: 'Теги не должны повторяться',
   numberOfCharacters: `Комментарий не должен превышать ${MAX_LENGTH_COMMENT}`,
@@ -70,7 +70,7 @@ function validateComment(action = ACTION_ADD) {
   }
 }
 
-function setStyleFieldInvalid() {
+function buttonClickHandler() {
   toggleStyleField(tagField, !tagField.validity.valid);
   toggleStyleField(commentField, !commentField.validity.valid);
 }
@@ -84,5 +84,5 @@ function toggleStyleField(field, error) {
 }
 
 
-export {validateTags, validateComment, setStyleFieldInvalid};
+export {validateTags, validateComment, buttonClickHandler};
 

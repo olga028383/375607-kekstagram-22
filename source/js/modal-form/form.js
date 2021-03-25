@@ -1,6 +1,6 @@
 import {saveData, createError} from '../ajax.js';
 import {actionModal} from '../modal.js';
-import {validateTags, validateComment, setStyleFieldInvalid} from './form-validate.js';
+import {validateTags, validateComment, buttonClickHandler} from './form-validate.js';
 import {clearEffect, hideSlider, switchFirstButton} from './slider.js';
 import {setDataZoom} from './scale-photo.js';
 
@@ -40,7 +40,7 @@ function showWindowRequest(templateName) {
   let blockMessage = content.querySelector(`.${templateName}`);
 
   let windowElement = blockMessage.cloneNode(true);
-  windowElement.setAttribute('style', 'z-index: 5');
+  windowElement.style.zIndex = '5';
   let close = windowElement.querySelector(`.${templateName}__button`);
   body.querySelector('main').appendChild(windowElement);
 
@@ -73,16 +73,16 @@ function togglePhoto(result, action = ACTION_ADD) {
   const previewEffects = form.querySelectorAll('.effects__preview');
 
   if (action === ACTION_DELETE) {
-    image.setAttribute('src', DEFAULT_IMAGE);
+    image.src = DEFAULT_IMAGE;
   } else {
-    image.setAttribute('src', result);
+    image.src = result;
   }
 
   previewEffects.forEach((element) => {
     if (action === ACTION_DELETE) {
       element.removeAttribute('style');
     } else {
-      element.setAttribute('style', `background-image: url(${result})`);
+      element.style.backgroundImage = `url(${result})`;
     }
   });
 }
@@ -97,8 +97,8 @@ function openForm() {
     validateTags();
     validateComment();
 
-    button.addEventListener('click', setStyleFieldInvalid);
-    form.addEventListener('submit', submitForm);
+    button.addEventListener('click', buttonClickHandler);
+    form.addEventListener('submit', formSumbitHandler);
 
     actionModal('close', ['click', 'keydown'], close, closeForm);
 
@@ -120,7 +120,7 @@ function closeForm() {
   validateTags(ACTION_DELETE);
   validateComment(ACTION_DELETE);
 
-  form.removeEventListener('submit', submitForm);
+  form.removeEventListener('submit', formSumbitHandler);
 
   form.reset();
   overlayForm.classList.add('hidden');
@@ -128,7 +128,7 @@ function closeForm() {
 
 }
 
-function submitForm(evt) {
+function formSumbitHandler(evt) {
   evt.preventDefault();
 
   saveData(

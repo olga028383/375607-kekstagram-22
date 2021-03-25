@@ -1,12 +1,8 @@
 function getRandom(min, max) {
   min = Math.ceil(Math.abs(min));
   max = Math.floor(Math.abs(max));
-
-  if (min >= max) {
-    return 0;
-  }
-
-  return Math.floor(Math.random() * (max - min)) + min;
+  //проверить, чтобы все работало
+  return (min >= max) ? 0 : Math.floor(Math.random() * (max - min)) + min;
 }
 
 function generateNumbers(min, max) {

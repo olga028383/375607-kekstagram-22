@@ -8,14 +8,15 @@ const EffectLists = {
   phobos: setEffectPhobos,
   heat: setEffectHeat,
 };
-const slider = document.querySelector('.effect-level__slider');
+const wraperSlider = document.querySelector('.effect-level');
+const slider = wraperSlider.querySelector('.effect-level__slider');
 const fieldEffect = document.querySelector('.effect-level__value');
 const effectButton = document.querySelectorAll('.effects__radio');
 const imageContainer = document.querySelector('.img-upload__preview');
 const image = imageContainer.querySelector('img');
 
-function setEffect(button) {
-  const effectName = button.getAttribute('value');
+function buttonChangeHandler(button) {
+  const effectName = button.value;
   setDataZoom();
   showSlider();
 
@@ -26,10 +27,6 @@ function setEffect(button) {
     clearEffect();
   }
 
-}
-
-function setEffectHandler(button) {
-  button.addEventListener('change', setEffect.bind(null, button));
 }
 
 function setEffectChrome() {
@@ -118,18 +115,19 @@ function clearEffect() {
 }
 
 function showSlider() {
-  slider.removeAttribute('style');
+  wraperSlider.removeAttribute('style');
 }
 
 function hideSlider() {
-  slider.setAttribute('style', 'display: none');
+  wraperSlider.style.display = 'none';
 }
 
 function updateSlider(filterName, postfix = '') {
   slider.noUiSlider.on('update', (_, handle, unencoded) => {
     let zoom = clearFiledZoom();
-    image.setAttribute('style', `filter: ${filterName}(${unencoded[handle]}${postfix}); transform: scale(${zoom / MAX_PERCENT})`);
-    fieldEffect.setAttribute('value', unencoded[handle]);
+    image.style.filter = `${filterName}(${unencoded[handle]}${postfix})`;
+    image.style.transform = `scale(${zoom / MAX_PERCENT})`;
+    fieldEffect.value = unencoded[handle];
   });
 }
 
@@ -149,7 +147,7 @@ noUiSlider.create(slider, {
 hideSlider();
 
 effectButton.forEach((button) => {
-  setEffectHandler(button);
+  button.addEventListener('change', buttonChangeHandler.bind(null, button));
 });
 
 export {clearEffect, hideSlider, switchFirstButton};

@@ -7,7 +7,6 @@ const closePhoto = bigPhoto.querySelector('.big-picture__cancel');
 const image = bigPhoto.querySelector('.big-picture__img img');
 const description = bigPhoto.querySelector('.social__caption');
 const likesCount = bigPhoto.querySelector('.likes-count');
-const commentsCount = bigPhoto.querySelector('.comments-count');
 const commentsSocialCount = bigPhoto.querySelector('.social__comment-count');
 const commentsLoader = bigPhoto.querySelector('.comments-loader');
 const commentsList = bigPhoto.querySelector('.social__comments');
@@ -15,13 +14,19 @@ const commentsList = bigPhoto.querySelector('.social__comments');
 let photoInfo = null;
 let showedComments = COUNT_COMMENTS;
 
+
 function setWindowInfo() {
   image.src = photoInfo.url;
   likesCount.textContent = photoInfo.likes;
-  commentsCount.textContent = photoInfo.comments.length;
+  commentsSocialCount.innerHTML = addMessageAboutCountComments();
   description.textContent = photoInfo.description;
 
   loadComments();
+}
+
+function addMessageAboutCountComments() {
+  const length = photoInfo.comments.length;
+  return `${(length > showedComments) ? showedComments : length} из <span class="comments-count">${length}</span> комментариев`;
 }
 
 function clearCommentsList() {
@@ -49,6 +54,7 @@ function loadCommentsHandler() {
 
   commentsList.appendChild(drawComments(loadedComments));
   showedComments = showedComments + loadedComments.length;
+  commentsSocialCount.innerHTML = addMessageAboutCountComments();
 
   if (photoInfo.comments.length - showedComments === 0) {
     commentsLoader.classList.add('hidden');
@@ -88,7 +94,6 @@ function openWindow(info) {
 
     body.classList.add('modal-open');
     bigPhoto.classList.remove('hidden');
-    commentsSocialCount.classList.add('hidden');
     commentsLoader.classList.add('hidden');
 
     setWindowInfo();

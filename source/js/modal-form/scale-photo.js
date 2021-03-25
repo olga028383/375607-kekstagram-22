@@ -22,12 +22,12 @@ function smallerControlClickHandler() {
 
 function setDataZoom(value = MAX_VALUE) {
   let scale = value / MAX_PERCENT;
-  fieldZoom.setAttribute('value', `${value}%`);
-  imageZoom.setAttribute('style', `transform: scale(${scale})`);
+  fieldZoom.value = `${value}%`;
+  imageZoom.style.transform = `scale(${scale})`;
 }
 
 function clearFiledZoom() {
-  return Number(fieldZoom.getAttribute('value').slice(0, -1));
+  return Number(fieldZoom.value.slice(0, -1));
 }
 
 setDataZoom();

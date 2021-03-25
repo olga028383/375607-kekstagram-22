@@ -49,7 +49,5 @@ function createComment(id) {
   }
 }
 
-let photos = new Array(QUANTITY_PHOTOS).fill(null).map((value, idx) => createPhoto(idx));
-
-export {photos};
+new Array(QUANTITY_PHOTOS).fill(null).map((value, idx) => createPhoto(idx));
 
