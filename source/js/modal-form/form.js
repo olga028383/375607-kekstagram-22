@@ -93,7 +93,7 @@ function openForm() {
 
   try {
     uploadPhoto();
-
+    setDataZoom();
     validateTags();
     validateComment();
 
@@ -111,7 +111,6 @@ function openForm() {
 
 function closeForm() {
   clearEffect();
-  setDataZoom();
   hideSlider();
   switchFirstButton();
 
