@@ -111,7 +111,7 @@ function setEffectHeat() {
 
 function clearEffect() {
   const currentEffect = image.className;
-  if(currentEffect) {
+  if (currentEffect) {
     image.classList.remove(currentEffect);
   }
   image.style = '';

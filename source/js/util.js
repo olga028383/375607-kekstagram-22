@@ -1,3 +1,5 @@
+const body = document.querySelector('body');
+
 function getRandom(min, max) {
   min = Math.ceil(Math.abs(min));
   max = Math.floor(Math.abs(max));
@@ -20,8 +22,21 @@ function generateNumbers(min, max) {
   };
 }
 
-function isKey(targetKey, key) {
-  return (targetKey === key );
+function isEscEvent(evt) {
+  return evt.key === 'Escape' || evt.key === 'Esc';
 }
 
-export {getRandom, generateNumbers, isKey};
+function isEnterEvent(evt) {
+  return evt.key === 'Enter';
+}
+
+function setStyleOpenModal(element){
+  body.classList.add('modal-open');
+  element.classList.remove('hidden');
+}
+
+function setStyleCloseModal(element){
+  body.classList.remove('modal-open');
+  element.classList.add('hidden');
+}
+export {getRandom, generateNumbers, isEscEvent, isEnterEvent, setStyleOpenModal, setStyleCloseModal};

@@ -1,4 +1,4 @@
-import {openWindowHandler} from './window-big-photo.js';
+import {addHandlersOpenModal} from './window-big-photo.js';
 
 const photoList = document.querySelector('.pictures');
 const photoTemplate = document.querySelector('#picture').content.querySelector('.picture');
@@ -14,7 +14,8 @@ function clearPhotoList() {
 }
 
 function drawPhoto(photos) {
-  photos.forEach((photo) => {
+
+  photos.forEach((photo, index) => {
     const photoElement = photoTemplate.cloneNode(true);
 
     photoElement.href = photo.url;
@@ -23,7 +24,7 @@ function drawPhoto(photos) {
     photoElement.querySelector('.picture__likes').textContent = photo.likes;
     photoListFragment.appendChild(photoElement);
 
-    openWindowHandler(photoElement, photo);
+    addHandlersOpenModal(photoElement, photos[index]);
   });
 
   clearPhotoList();

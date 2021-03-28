@@ -83,6 +83,20 @@ function toggleStyleField(field, error) {
   }
 }
 
+function addHandlerFieldInFocus(field, callback) {
+  field.addEventListener('focus', () => {
+    document.removeEventListener('keydown', callback);
+  });
 
-export {validateTags, validateComment, buttonClickHandler};
+  field.addEventListener('blur', () => {
+    document.addEventListener('keydown', callback);
+  });
+}
+
+function addHandlerFieldsInFocus(callback) {
+  addHandlerFieldInFocus(tagField, callback);
+  addHandlerFieldInFocus(commentField, callback);
+}
+
+export {validateTags, validateComment, buttonClickHandler, addHandlerFieldsInFocus};
 

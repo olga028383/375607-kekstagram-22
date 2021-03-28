@@ -1,7 +1,6 @@
-import {actionModal} from '../modal.js';
+import {isEscEvent, isEnterEvent, setStyleOpenModal, setStyleCloseModal} from '../util.js';
 
 const COUNT_COMMENTS = 5;
-const body = document.querySelector('body');
 const bigPhoto = document.querySelector('.big-picture');
 const closePhoto = bigPhoto.querySelector('.big-picture__cancel');
 const image = bigPhoto.querySelector('.big-picture__img img');
@@ -13,7 +12,6 @@ const commentsList = bigPhoto.querySelector('.social__comments');
 
 let photoInfo = null;
 let showedComments = COUNT_COMMENTS;
-
 
 function setWindowInfo() {
   image.src = photoInfo.url;
@@ -87,30 +85,50 @@ function drawComments(comments) {
   return commentListFragment;
 }
 
-function openWindow(info) {
+function closeModal() {
+  clearCommentsList();
 
-  return function () {
-    photoInfo = info;
+  setStyleCloseModal(bigPhoto);
 
-    body.classList.add('modal-open');
-    bigPhoto.classList.remove('hidden');
-    commentsLoader.classList.add('hidden');
+  showedComments = COUNT_COMMENTS;
+  commentsLoader.removeEventListener('click', loadCommentsHandler);
 
-    setWindowInfo();
-    actionModal('close', ['click', 'keydown'], closePhoto, closeWindow);
+  document.removeEventListener('keydown', photoEscKeydownHandler);
+}
+
+function opeModal() {
+
+  setStyleOpenModal(bigPhoto);
+
+  commentsLoader.classList.add('hidden');
+
+  setWindowInfo();
+
+  closePhoto.addEventListener('click', closeModal);
+  document.addEventListener('keydown', photoEscKeydownHandler);
+}
+
+function photoEscKeydownHandler(evt) {
+  if (isEscEvent(evt)) {
+    evt.preventDefault();
+    closeModal();
   }
 }
 
-function closeWindow() {
-  clearCommentsList();
-  body.classList.remove('modal-open');
-  bigPhoto.classList.add('hidden');
-  showedComments = COUNT_COMMENTS;
-  commentsLoader.removeEventListener('click', loadCommentsHandler);
+function addHandlersOpenModal(photo, info) {
+
+  photo.addEventListener('click', (evt) => {
+    photoInfo = info;
+    evt.preventDefault();
+    opeModal(photoInfo);
+  });
+
+  photo.addEventListener('keydown', (evt) => {
+    if (isEnterEvent(evt)) {
+      photoInfo = info;
+      opeModal(photoInfo);
+    }
+  });
 }
 
-function openWindowHandler(photo, info) {
-  actionModal('open', ['click', 'keydown'], photo, openWindow(info));
-}
-
-export {openWindowHandler};
+export {addHandlersOpenModal};

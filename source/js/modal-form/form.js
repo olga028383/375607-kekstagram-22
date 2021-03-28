@@ -1,55 +1,30 @@
 import {saveData, createError} from '../ajax.js';
-import {actionModal} from '../modal.js';
-import {validateTags, validateComment, buttonClickHandler} from './form-validate.js';
+import {isEscEvent, setStyleOpenModal, setStyleCloseModal} from '../util.js';
+import {validateTags, validateComment, buttonClickHandler, addHandlerFieldsInFocus} from './form-validate.js';
 import {clearEffect, hideSlider, switchFirstButton} from './slider.js';
 import {setDataZoom} from './scale-photo.js';
+import {showWindowRequest} from './window-request.js';
 
 const FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 
 const ErrorMessages = {
-  notTemplate: 'Такого шаблона не существует',
   imageFormat: `Допустимый формат изображений ${FILE_TYPES.join(', ')}`,
 };
 
 const ACTION_ADD = 'add';
 const ACTION_DELETE = 'delete';
 
-const body = document.querySelector('body');
-const form = body.querySelector('.img-upload__form');
-const fileForm = form.querySelector('#upload-file');
+const form = document.querySelector('.img-upload__form');
+const fileFieldForm = form.querySelector('#upload-file');
 const overlayForm = form.querySelector('.img-upload__overlay');
-const image = overlayForm.querySelector('img');
-const close = form.querySelector('#upload-cancel');
-const button = form.querySelector('#upload-submit');
+const imageForm = overlayForm.querySelector('img');
+const closeButtonForm = form.querySelector('#upload-cancel');
+const buttonForm = form.querySelector('#upload-submit');
 const DEFAULT_IMAGE = 'img/upload-default-image.jpg';
 
-function hideWindowRequest(template) {
-  return function () {
-    template.remove();
-  }
-}
-
-function showWindowRequest(templateName) {
-  const template = body.querySelector(`#${templateName}`);
-
-  if (!template) {
-    throw Error(ErrorMessages.notTemplate);
-  }
-
-  const content = template.content;
-  let blockMessage = content.querySelector(`.${templateName}`);
-
-  let windowElement = blockMessage.cloneNode(true);
-  windowElement.style.zIndex = '5';
-  let close = windowElement.querySelector(`.${templateName}__button`);
-  body.querySelector('main').appendChild(windowElement);
-
-  actionModal('close', ['click', 'keydown', 'window'], close, hideWindowRequest(windowElement));
-
-}
-
 function uploadPhoto() {
-  const file = fileForm.files[0];
+  const file = fileFieldForm.files[0];
+
   const fileName = file.name.toLowerCase();
 
   const matches = FILE_TYPES.some((it) => {
@@ -73,9 +48,9 @@ function togglePhoto(result, action = ACTION_ADD) {
   const previewEffects = form.querySelectorAll('.effects__preview');
 
   if (action === ACTION_DELETE) {
-    image.src = DEFAULT_IMAGE;
+    imageForm.src = DEFAULT_IMAGE;
   } else {
-    image.src = result;
+    imageForm.src = result;
   }
 
   previewEffects.forEach((element) => {
@@ -87,24 +62,36 @@ function togglePhoto(result, action = ACTION_ADD) {
   });
 }
 
+function closeButtonEscKeydownHandler(evt) {
+  if (isEscEvent(evt)) {
+    evt.preventDefault();
+    closeForm();
+  }
+}
+
 function openForm() {
-  overlayForm.classList.remove('hidden');
-  body.classList.add('modal-open');
 
   try {
     uploadPhoto();
+
+    setStyleOpenModal(overlayForm);
+
     setDataZoom();
     validateTags();
     validateComment();
 
-    button.addEventListener('click', buttonClickHandler);
+    buttonForm.addEventListener('click', buttonClickHandler);
     form.addEventListener('submit', formSumbitHandler);
 
-    actionModal('close', ['click', 'keydown'], close, closeForm);
+    closeButtonForm.addEventListener('click', () => {
+      closeForm();
+    });
+
+    document.addEventListener('keydown', closeButtonEscKeydownHandler);
+    addHandlerFieldsInFocus(closeButtonEscKeydownHandler);
 
   } catch (err) {
     createError(err.message);
-    closeForm();
   }
 
 }
@@ -119,12 +106,10 @@ function closeForm() {
   validateTags(ACTION_DELETE);
   validateComment(ACTION_DELETE);
 
-  form.removeEventListener('submit', formSumbitHandler);
-
   form.reset();
-  overlayForm.classList.add('hidden');
-  body.classList.remove('modal-open');
+  setStyleCloseModal(overlayForm);
 
+  document.removeEventListener('keydown', closeButtonEscKeydownHandler);
 }
 
 function formSumbitHandler(evt) {
@@ -151,8 +136,10 @@ function formSumbitHandler(evt) {
   );
 }
 
+fileFieldForm.addEventListener('change', () => {
+  openForm();
+});
 
-actionModal('open', ['change', 'keydown'], fileForm, openForm);
 
 
 
