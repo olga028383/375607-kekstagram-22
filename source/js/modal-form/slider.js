@@ -17,7 +17,6 @@ const image = imageContainer.querySelector('img');
 
 function buttonChangeHandler(button) {
   const effectName = button.value;
-  setDataZoom();
   showSlider();
 
   if (Object.keys(EffectLists).includes(effectName)) {

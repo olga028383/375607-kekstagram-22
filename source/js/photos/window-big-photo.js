@@ -104,7 +104,10 @@ function opeModal() {
 
   setWindowInfo();
 
-  closePhoto.addEventListener('click', closeModal);
+  closePhoto.addEventListener('click', (evt) => {
+    closeModal();
+  });
+
   document.addEventListener('keydown', photoEscKeydownHandler);
 }
 
