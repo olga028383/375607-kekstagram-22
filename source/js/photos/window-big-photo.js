@@ -105,6 +105,7 @@ function opeModal() {
   setWindowInfo();
 
   closePhoto.addEventListener('click', (evt) => {
+    evt.preventDefault();
     closeModal();
   });
 

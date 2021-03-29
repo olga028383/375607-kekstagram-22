@@ -1,5 +1,5 @@
 /* global noUiSlider:readonly */
-import {setDataZoom, clearFiledZoom, MAX_PERCENT} from './scale-photo.js';
+import {clearFiledZoom, MAX_PERCENT} from './scale-photo.js';
 
 const EffectLists = {
   chrome: setEffectChrome,
