@@ -24,13 +24,14 @@ function isCountTags(tagValues) {
 }
 
 function tagFieldInputHandler() {
-  const tagValues = tagField.value.toLowerCase().trim().split(/\s+/);
+  const clearedField = tagField.value.toLowerCase().trim();
+  const tagValues = clearedField.split(/\s+/);
   const uniqHastags = [...new Set(tagValues)];
 
   tagField.classList.remove(ERROR_CLASS);
   tagField.setCustomValidity('');
 
-  if (!isCheckFilling(tagValues)) {
+  if (!isCheckFilling(tagValues) && clearedField) {
     tagField.setCustomValidity(ErrorMessages.fillingTags);
     tagField.classList.add(ERROR_CLASS);
   }
