@@ -14,37 +14,37 @@ const ErrorMessages = {
 const tagField = document.querySelector('.text__hashtags');
 const commentField = document.querySelector('.text__description');
 
-function isCheckFilling(tagValue) {
+function isCheckFilling(tagValues) {
   const REGULAR = /^#[\wa-яА-Я]{1,19}$/;
-  return tagValue.every((item) => (item === ' ' || REGULAR.test(item)));
+  return tagValues.every((item) => REGULAR.test(item));
 }
 
-function isCountTags(tagValue) {
-  return tagValue.length > MAX_COUNT_TAGS;
-}
-
-function isFindDublicateValues(tagValue) {
-  return tagValue.some((element, index, lists) => {
-    return lists.lastIndexOf(element) !== index;
-  });
+function isCountTags(tagValues) {
+  return tagValues.length > MAX_COUNT_TAGS;
 }
 
 function tagFieldInputHandler() {
-  const tagValue = tagField.value.toLowerCase().split(' ');
+  const tagValues = tagField.value.toLowerCase().trim().split(/\s+/);
+  const uniqHastags = [...new Set(tagValues)];
 
-  if (!isCheckFilling(tagValue)) {
+  tagField.classList.remove(ERROR_CLASS);
+  tagField.setCustomValidity('');
+
+  if (!isCheckFilling(tagValues)) {
     tagField.setCustomValidity(ErrorMessages.fillingTags);
     tagField.classList.add(ERROR_CLASS);
-  } else if (isCountTags(tagValue)) {
+  }
+
+  if (isCountTags(tagValues)) {
     tagField.setCustomValidity(ErrorMessages.numberOfTags);
     tagField.classList.add(ERROR_CLASS);
-  } else if (isFindDublicateValues(tagValue)) {
+  }
+
+  if (uniqHastags.length !== tagValues.length) {
     tagField.setCustomValidity(ErrorMessages.repeatTags);
     tagField.classList.add(ERROR_CLASS);
-  } else {
-    tagField.classList.remove(ERROR_CLASS);
-    tagField.setCustomValidity('');
   }
+
   tagField.reportValidity();
 }
 
